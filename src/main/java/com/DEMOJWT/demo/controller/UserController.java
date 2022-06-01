@@ -1,8 +1,10 @@
 package com.DEMOJWT.demo.controller;
 
 import com.DEMOJWT.demo.dto.User;
+import com.DEMOJWT.demo.repository.RepositoryUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
 @RestController
 public class UserController {
 
+    @Autowired
+    RepositoryUser repositoryUser;
+
     @PostMapping("user")
     public User login(@RequestBody User user) {
 
@@ -23,8 +28,7 @@ public class UserController {
         User newUser = new User();
         newUser.setUser(user.getUser());
         newUser.setToken(token);
-        return newUser;
-
+        return repositoryUser.save(newUser);
     }
 
     private String getJWTToken(User user) {
@@ -32,7 +36,7 @@ public class UserController {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
-        return Jwts
+         var token = Jwts
                 .builder()
                 .setId(user.id())
                 .setSubject(user.getUser())
@@ -45,5 +49,8 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
+    return "Valido " + token;
     }
+
+
 }
