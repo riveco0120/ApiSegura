@@ -1,5 +1,6 @@
 package com.DEMOJWT.demo.dto;
 
+@Docu
 public class User {
     private String user;
     private String pwd;
