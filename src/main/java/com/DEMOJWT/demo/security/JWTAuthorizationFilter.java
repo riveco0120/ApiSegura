@@ -1,6 +1,10 @@
 package com.DEMOJWT.demo.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,11 +18,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * JWTAuthorizationFilter Class
+ *
+ * @version 0.0.1
+ * @since 0.0.1
+ */
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final String HEADER = "Authorization";
     private final String PREFIX = "Valido ";
     private final String SECRET = "mySecretKey";
-
 
 
     @Override
@@ -37,11 +46,16 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-            return;
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
     }
 
+    /**
+     * Validate token
+     *
+     * @param request Http request
+     * @return Claims - ClaimsMutator
+     */
     private Claims validateToken(HttpServletRequest request) {
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
@@ -50,7 +64,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     /**
      * Authentication method in Spring flow
      *
-     * @param claims
+     * @param claims Claims
      */
     private void setUpSpringAuthentication(Claims claims) {
         @SuppressWarnings("unchecked")
@@ -59,14 +73,17 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
         SecurityContextHolder.getContext().setAuthentication(auth);
-
     }
 
+    /**
+     * check JWT Token
+     *
+     * @param request Http request
+     * @param res     Http Response
+     * @return Boolean
+     */
     private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
         String authenticationHeader = request.getHeader(HEADER);
-        if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
-            return false;
-        return true;
+        return authenticationHeader != null && authenticationHeader.startsWith(PREFIX);
     }
-
 }

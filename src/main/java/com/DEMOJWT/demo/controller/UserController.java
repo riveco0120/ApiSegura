@@ -15,12 +15,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * UserController Controller
+ *
+ * @version 0.0.1
+ * @since 0.0.1
+ */
 @RestController
 public class UserController {
 
     @Autowired
     RepositoryUser repositoryUser;
 
+    /**
+     * Save a new user
+     *
+     * @param user DTO
+     * @return User
+     */
     @PostMapping("user")
     public User login(@RequestBody User user) {
 
@@ -31,12 +43,18 @@ public class UserController {
         return repositoryUser.save(newUser);
     }
 
+    /**
+     * Generate a new JWT
+     *
+     * @param user DTO
+     * @return Token
+     */
     private String getJWTToken(User user) {
         String secretKey = "mySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
-         var token = Jwts
+        var token = Jwts
                 .builder()
                 .setId(user.id())
                 .setSubject(user.getUser())
@@ -49,8 +67,6 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
-    return "Valido " + token;
+        return "Valido " + token;
     }
-
-
 }
