@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -17,25 +17,25 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @PostMapping("user")
-    public User login(@RequestParam("user") String username, @RequestParam("password") String pwd) {
+    public User login(@RequestBody User user) {
 
-        String token = getJWTToken(username);
-        User user = new User();
-        user.setUser(username);
-        user.setToken(token);
-        return user;
+        String token = getJWTToken(user);
+        User newUser = new User();
+        newUser.setUser(user.getUser());
+        newUser.setToken(token);
+        return newUser;
 
     }
 
-    private String getJWTToken(String username) {
+    private String getJWTToken(User user) {
         String secretKey = "mySecretKey";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
-        String token = Jwts
+        return Jwts
                 .builder()
-                .setId("sofkaJWT")
-                .setSubject(username)
+                .setId(user.id())
+                .setSubject(user.getUser())
                 .claim("authorities",
                         grantedAuthorities.stream()
                                 .map(GrantedAuthority::getAuthority)
@@ -45,6 +45,5 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
-        return "Valido " + token;
     }
 }
