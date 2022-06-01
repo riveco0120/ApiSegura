@@ -12,8 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class HelloWorldController {
+
+    /**
+     * Hello endpoint
+     *
+     * @param name String
+     * @return String
+     */
     @RequestMapping("hello")
     public String helloWorld(@RequestParam(value = "name", defaultValue = "World") String name) {
         return "Hello " + name + "!!";
+    }
+
+    /**
+     * Welcome endpoint
+     *
+     * @return String
+     */
+    @RequestMapping("welcome")
+    public String welcome() {
+        return "Welcome to the system, you have a valid token.";
     }
 }
