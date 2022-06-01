@@ -4,7 +4,11 @@ import com.DEMOJWT.demo.dto.User;
 import com.DEMOJWT.demo.repository.RepositoryUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 @RestController
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     RepositoryUser repositoryUser;
 
@@ -34,13 +39,13 @@ public class UserController {
      * @return User
      */
     @PostMapping("user")
-    public User login(@RequestBody User user) {
+    public ResponseEntity<User> login(@RequestBody User user) {
 
         String token = getJWTToken(user);
         User newUser = new User();
         newUser.setUser(user.getUser());
         newUser.setToken(token);
-        return repositoryUser.save(newUser);
+        return new ResponseEntity<>(repositoryUser.save(newUser), HttpStatus.CREATED);
     }
 
     /**
