@@ -1,5 +1,5 @@
 # Spring Boot Mongodb JWT
 
-![](../../Pictures/Screenshots/Screenshot from 2022-06-01 18-04-15.png)
-![](../../Pictures/Screenshots/Screenshot from 2022-06-01 18-04-25.png)
-![](../../Pictures/Screenshots/Screenshot from 2022-06-01 18-05-47.png)
+![](./images/Screenshot%20from%202022-06-01%2018-04-15.png)
+![](./images/Screenshot%20from%202022-06-01%2018-04-25.png)
+![](./images/Screenshot%20from%202022-06-01%2018-05-47.png)
