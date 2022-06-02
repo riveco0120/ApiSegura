@@ -12,7 +12,9 @@ Se genera un usuario llamado pepito julio  con su password de manera conrecta
 ![image](https://user-images.githubusercontent.com/103125129/171556719-7181f3a4-5041-47a5-b806-03569f86993b.png)
 ![image](https://user-images.githubusercontent.com/103125129/171556843-54796113-e9d5-450b-acbb-3f3d2ecada2d.png)
 
-al utilizar la llave se optiene el saludo 
+al utilizar la llave se optiene el saludo a pepito 
+![image](https://user-images.githubusercontent.com/103125129/171557416-a29f6f20-45f7-4857-83d3-fefe792bf756.png)
+
 
 ![](./images/Screenshot%20from%202022-06-01%2018-04-15.png)
 ![](./images/Screenshot%20from%202022-06-01%2018-04-25.png)
